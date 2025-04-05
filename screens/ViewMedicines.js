@@ -22,7 +22,7 @@ const ViewMedicines = ({ navigation }) => {
       <Text style={styles.title}>Medicines List</Text>
       <FlatList
         data={medicines}
-        keyExtractor={(item) => item.name} // Use 'name' as the key instead of 'id'
+        keyExtractor={(item) => item.name} 
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.medName}>{item.name} ({item.brand})</Text>

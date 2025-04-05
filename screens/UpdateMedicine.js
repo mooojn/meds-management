@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import YearPicker from '../components/YearPicker';
+import MedicineTypePicker from '../components/MedicineTypePicker';
 import database from '../database/database';
 
 const UpdateMedicine = ({ navigation, route }) => {
@@ -53,13 +54,13 @@ const UpdateMedicine = ({ navigation, route }) => {
       type,
       price: parseFloat(price),
       quantity: parseInt(quantity),
-      date_of_entry: medicine.date_of_entry || new Date().toISOString(), // fallback
+      date_of_entry: medicine.date_of_entry || new Date().toISOString(),
       best_before: expiryDate,
     };
 
     try {
       setIsSubmitting(true);
-      await database.updateMedicine(medicine.name, updatedMedicine); // Ensure correct method
+      await database.updateMedicine(medicine.name, updatedMedicine);
       console.log('Update attempted:', updatedMedicine);
       Alert.alert('Success', 'Medicine updated successfully');
       navigation.goBack();
@@ -94,8 +95,13 @@ const UpdateMedicine = ({ navigation, route }) => {
         <Text style={styles.label}>Brand</Text>
         <TextInput style={styles.input} placeholder="Brand" value={brand} onChangeText={setBrand} />
 
-        <Text style={styles.label}>Type</Text>
+        {/* <Text style={styles.label}>Type</Text>
         <TextInput style={styles.input} placeholder="Type" value={type} onChangeText={setType} />
+         */}
+        <MedicineTypePicker
+          selectedType={type}
+          onTypeChange={setType}
+        />
 
         <Text style={styles.label}>Price</Text>
         <TextInput style={styles.input} placeholder="Price" value={price} onChangeText={setPrice} keyboardType="numeric" />

@@ -1,9 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import database from '../database/database';
 
-const MedicineDetails = ({ route, navigation }) => {
+const MedicineDetails = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
   const { medicine } = route.params;
+
+  const [currentMedicine, setCurrentMedicine] = useState(medicine);
+
+  // Reload medicine details when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchMedicine = async () => {
+        try {
+          const updatedMedicine = await database.getMedicineByName(currentMedicine.name); // Assuming you have this method
+          setCurrentMedicine(updatedMedicine);
+        } catch (error) {
+          console.error('Error fetching medicine details', error);
+        }
+      };
+
+      fetchMedicine();
+
+      return () => {
+        // Cleanup (optional) when screen is unfocused
+      };
+    }, [currentMedicine.name]) // Runs again if medicine name changes
+  );
 
   const handleDelete = () => {
     Alert.alert('Confirm', 'Are you sure you want to delete this medicine?', [
@@ -12,8 +37,8 @@ const MedicineDetails = ({ route, navigation }) => {
         text: 'Delete',
         onPress: async () => {
           try {
-            await database.deleteMedicine(medicine.name);
-            navigation.goBack(); // Navigate back to the main screen after deletion
+            await database.deleteMedicine(currentMedicine.name);
+            navigation.goBack(); // Go back after successful deletion
           } catch (error) {
             Alert.alert('Error', 'Failed to delete medicine');
             console.error(error);
@@ -24,20 +49,20 @@ const MedicineDetails = ({ route, navigation }) => {
   };
 
   const handleUpdate = () => {
-    navigation.navigate('UpdateMedicine', { medicineName: medicine.name });
+    navigation.navigate('UpdateMedicine', { medicineName: currentMedicine.name });
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Medicine Details</Text>
 
-      <Text style={styles.label}>Name: <Text style={styles.value}>{medicine.name}</Text></Text>
-      <Text style={styles.label}>Brand: <Text style={styles.value}>{medicine.brand}</Text></Text>
-      <Text style={styles.label}>Type: <Text style={styles.value}>{medicine.type}</Text></Text>
-      <Text style={styles.label}>Price: <Text style={styles.value}>${medicine.price}</Text></Text>
-      <Text style={styles.label}>Quantity: <Text style={styles.value}>{medicine.quantity}</Text></Text>
-      <Text style={styles.label}>Expiry Date: <Text style={styles.value}>{medicine.best_before}</Text></Text>
-      <Text style={styles.label}>Date of Entry: <Text style={styles.value}>{medicine.date_of_entry}</Text></Text>
+      <Text style={styles.label}>Name: <Text style={styles.value}>{currentMedicine.name}</Text></Text>
+      <Text style={styles.label}>Brand: <Text style={styles.value}>{currentMedicine.brand}</Text></Text>
+      <Text style={styles.label}>Type: <Text style={styles.value}>{currentMedicine.type}</Text></Text>
+      <Text style={styles.label}>Price: <Text style={styles.value}>${currentMedicine.price}</Text></Text>
+      <Text style={styles.label}>Quantity: <Text style={styles.value}>{currentMedicine.quantity}</Text></Text>
+      <Text style={styles.label}>Expiry Date: <Text style={styles.value}>{currentMedicine.best_before}</Text></Text>
+      <Text style={styles.label}>Date of Entry: <Text style={styles.value}>{currentMedicine.date_of_entry}</Text></Text>
 
       <View style={styles.buttonGroup}>
         <TouchableOpacity style={styles.editButton} onPress={handleUpdate}>

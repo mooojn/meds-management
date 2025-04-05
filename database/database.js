@@ -2,7 +2,6 @@ import { openDatabaseSync } from 'expo-sqlite';
 
 const db = openDatabaseSync('medicinesMS.db');
 
-// Execute a query with given SQL, parameters, and write operation flag
 const executeQuery = (sql, params = [], isWrite = false) => {
   try {
     if (isWrite) {
@@ -16,7 +15,6 @@ const executeQuery = (sql, params = [], isWrite = false) => {
   }
 };
 
-// Initialize database and create medicines table if not exists
 const initializeDatabase = async () => {
   const schema = [
     `CREATE TABLE IF NOT EXISTS medicines (
@@ -42,7 +40,6 @@ const initializeDatabase = async () => {
   }
 };
 
-// Function to add a new medicine to the table
 const addMedicine = (medicine) => {
   const { name, brand, date_of_entry, price, best_before, quantity, type } = medicine;
   try {
@@ -57,7 +54,6 @@ const addMedicine = (medicine) => {
   }
 };
 
-// Function to update an existing medicine's details based on name
 const updateMedicine = (originalName, medicine) => {
   const { name, brand, date_of_entry, price, best_before, quantity, type } = medicine;
   try {
@@ -72,8 +68,6 @@ const updateMedicine = (originalName, medicine) => {
   }
 };
 
-
-// Function to delete a medicine by its name
 const deleteMedicine = (name) => {
   try {
     executeQuery('DELETE FROM medicines WHERE name = ?', [name], true);
@@ -83,7 +77,6 @@ const deleteMedicine = (name) => {
   }
 };
 
-// Function to retrieve all medicines from the table
 const getAllMedicines = () => {
   try {
     const result = executeQuery('SELECT * FROM medicines');
@@ -92,18 +85,15 @@ const getAllMedicines = () => {
     console.error('Error fetching medicines:', error);
   }
 };
-
-// Function to get a medicine by its name
 const getMedicineByName = (name) => {
   try {
     const result = executeQuery('SELECT * FROM medicines WHERE name = ?', [name]);
-    return result[0]; // Assuming there is only one result for a unique name
+    return result[0];
   } catch (error) {
     console.error('Error fetching medicine:', error);
   }
 };
 
-// Function to search medicines by a specific field (e.g., name, type)
 const searchMedicines = (field, value) => {
   try {
     const result = executeQuery(`SELECT * FROM medicines WHERE ${field} = ?`, [value]);
@@ -113,12 +103,10 @@ const searchMedicines = (field, value) => {
   }
 };
 
-// Initialize test data if the medicines table is empty
 const initializeTestData = () => {
   try {
     const result = executeQuery('SELECT COUNT(*) as count FROM medicines');
     if (result[0].count === 0) {
-      // Insert sample medicine records if no records exist
       executeQuery(
         'INSERT INTO medicines (name, brand, date_of_entry, price, best_before, quantity, type) VALUES (?, ?, ?, ?, ?, ?, ?)',
         ['Paracetamol', 'Brand A', '2025-04-03', 10.99, '2026-04-03', 100, 'Tablet'],
@@ -142,7 +130,6 @@ const initializeTestData = () => {
   }
 };
 
-// Initialize the database
 const database = {
   isInitialized: false,
 

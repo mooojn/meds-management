@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import YearPicker from '../components/YearPicker';
+import MedicineTypePicker from '../components/MedicineTypePicker';
 import {
   View,
   Text,
@@ -88,7 +89,7 @@ const CreateMedicineScreen = ({ navigation }) => {
             onChangeText={setPrice}
             keyboardType="numeric"
           />
-{/* 
+          {/* 
           <Text style={styles.label}>Best Before (YYYY-MM-DD)</Text>
           <TextInput
             style={styles.input}
@@ -107,12 +108,16 @@ const CreateMedicineScreen = ({ navigation }) => {
             keyboardType="numeric"
           />
 
-          <Text style={styles.label}>Type</Text>
+          {/* <Text style={styles.label}>Type</Text>
           <TextInput
             style={styles.input}
             placeholder="Type"
             value={type}
             onChangeText={setType}
+          /> */}
+          <MedicineTypePicker
+            selectedType={type}
+            onTypeChange={setType}
           />
 
           <Text style={styles.label}>Description (optional)</Text>

@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert, TextInput } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import database from '../database/database';
 
 const MainScreen = ({ navigation }) => {
   const [medicines, setMedicines] = useState([]);
+  const [filteredMedicines, setFilteredMedicines] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [priceFilter, setPriceFilter] = useState('');
+  const [priceCondition, setPriceCondition] = useState('>');
+  const [expiryYearFilter, setExpiryYearFilter] = useState('');
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       loadMedicines();
     });
 
-    // Initial load
     loadMedicines();
-
-    // Cleanup the listener on unmount
     return unsubscribe;
   }, [navigation]);
 
-  // Function to load medicines from the database
   const loadMedicines = async () => {
     try {
       const meds = await database.getAllMedicines();
       setMedicines(meds);
+      setFilteredMedicines(meds);
     } catch (error) {
       Alert.alert('Error', 'Failed to load medicines');
       console.error(error);
@@ -39,6 +42,26 @@ const MainScreen = ({ navigation }) => {
     navigation.navigate('MedicineDetails', { medicine });
   };
 
+  const applyFilters = () => {
+    let filtered = [...medicines];
+
+    if (priceFilter.trim()) {
+      const priceVal = parseFloat(priceFilter);
+      filtered = filtered.filter(med =>
+        priceCondition === '>' ? med.price > priceVal : med.price < priceVal
+      );
+    }
+
+    if (expiryYearFilter.trim()) {
+      filtered = filtered.filter(med => {
+        const year = parseInt(med.best_before?.slice(0, 4));
+        return year > parseInt(expiryYearFilter);
+      });
+    }
+
+    setFilteredMedicines(filtered);
+  };
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -51,12 +74,56 @@ const MainScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Medicine Management System</Text>
 
+      {/* Filters */}
+      <View style={styles.filterContainer}>
+        <TextInput
+          style={styles.filterInput}
+          placeholder="Price"
+          value={priceFilter}
+          onChangeText={setPriceFilter}
+          keyboardType="numeric"
+        />
+        <TouchableOpacity
+          style={[styles.toggleButton, priceCondition === '>' ? styles.active : null]}
+          onPress={() => setPriceCondition('>')}
+        >
+          <Text>{'Above'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.toggleButton, priceCondition === '<' ? styles.active : null]}
+          onPress={() => setPriceCondition('<')}
+        >
+          <Text>{'Below'}</Text>
+        </TouchableOpacity>
+
+        {/* Expiry Year Filter */}
+        <View style={styles.pickerWrapper}>
+          <Picker
+            selectedValue={expiryYearFilter}
+            onValueChange={(value) => setExpiryYearFilter(value)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Expiry Year >" value="" />
+            {Array.from({ length: 26 }, (_, i) => 2025 + i).map((year) => (
+              <Picker.Item key={year} label={year.toString()} value={year.toString()} />
+            ))}
+          </Picker>
+        </View>
+
+        {/* Apply Filters Button */}
+        <TouchableOpacity style={styles.filterButton} onPress={applyFilters}>
+          <Text style={styles.filterButtonText}>Apply Filters</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Create Button */}
       <TouchableOpacity style={styles.createButton} onPress={handleAdd}>
         <Text style={styles.createButtonText}>Create New Medicine</Text>
       </TouchableOpacity>
 
+      {/* Medicine List */}
       <FlatList
-        data={medicines}
+        data={filteredMedicines}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
           <View style={styles.tableRow}>
@@ -88,7 +155,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   createButton: {
     backgroundColor: '#36B1F0',
@@ -127,6 +194,61 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginBottom: 45,
+  },
+  filterInput: {
+    flexBasis: '25%',
+    marginRight: 5,
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    paddingHorizontal: 8,
+    borderRadius: 5,
+    backgroundColor: '#fff',
+  },
+  toggleButton: {
+    height: 40,
+    width: 50,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 2,
+    backgroundColor: '#fff',
+  },
+  active: {
+    backgroundColor: '#ddd',
+  },
+  filterButton: {
+    backgroundColor: '#FFA500',
+    padding: 10,
+    borderRadius: 5,
+    marginLeft: 5,
+  },
+  filterButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  pickerWrapper: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginLeft: 5,
+    marginVertical: 5,
+    backgroundColor: '#fff',
+    width: 120,
+    height: 40,
+    justifyContent: 'center',
+  },
+  picker: {
+    height: 50,
+    width: '100%',
   },
 });
 

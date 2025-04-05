@@ -9,7 +9,7 @@ const MedicineListScreen = () => {
 
   const fetchMedicines = async () => {
     try {
-      const loadedMedicines = await database.getAllMedicines(); // Fetch medicines from the database
+      const loadedMedicines = await database.getAllMedicines(); 
       setMedicines(loadedMedicines);
     } catch (error) {
       console.error('Error fetching medicines:', error);
@@ -17,7 +17,7 @@ const MedicineListScreen = () => {
   };
 
   useEffect(() => {
-    fetchMedicines(); // Fetch medicines on component mount
+    fetchMedicines(); 
   }, []);
 
   return (

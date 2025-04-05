@@ -1,24 +1,23 @@
+// components/MedicineTypePicker.js
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-const YearPicker = ({ selectedYear, onYearChange, onValueChange }) => {
-  const years = Array.from({ length: 26 }, (_, i) => 2025 + i);
-
-  const handleChange = onYearChange || onValueChange;
+const MedicineType = ({ selectedType, onTypeChange }) => {
+  const medicineTypes = ['Tablet', 'Capsule', 'Syrup', 'Cream', 'Injection'];
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Best Before</Text>
+      <Text style={styles.label}>Medicine Type</Text>
       <View style={styles.pickerWrapper}>
         <Picker
-          selectedValue={selectedYear}
+          selectedValue={selectedType}
+          onValueChange={(itemValue) => onTypeChange(itemValue)}
           style={styles.picker}
-          onValueChange={(itemValue) => handleChange?.(itemValue)}
         >
-          <Picker.Item label="Select Year" value="" />
-          {years.map((year) => (
-            <Picker.Item key={year} label={year.toString()} value={year.toString()} />
+          <Picker.Item label="Select Medicine Type" value="" />
+          {medicineTypes.map((type) => (
+            <Picker.Item key={type} label={type} value={type} />
           ))}
         </Picker>
       </View>
@@ -47,4 +46,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default YearPicker;
+export default MedicineType;
