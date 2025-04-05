@@ -10,8 +10,6 @@ import ViewMedicines from './screens/ViewMedicines';
 import UpdateMedicine from './screens/UpdateMedicine';
 import CreateMedicine from './screens/CreateMedicine';
 import MedicineDetails from './screens/MedicineDetails';
-// import Quiz from './screens/Quiz';
-// import QuizResult from './screens/QuizResult';
 
 const Stack = createStackNavigator();
 
@@ -44,8 +42,6 @@ const App = () => {
   return (
       <NavigationContainer>
         <Stack.Navigator>
-          {/* <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} /> */}
-          {/* <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} /> */}
           <Stack.Screen name="MainScreen" component={MainScreen} />
           <Stack.Screen name="ViewMedicines" component={ViewMedicines} />
           <Stack.Screen name="UpdateMedicine" component={UpdateMedicine} />

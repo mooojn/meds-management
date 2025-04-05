@@ -1,37 +1,43 @@
-# UET Quiz Mobile App 📚📱  
+# Medicine Management System 💊📱
 
-A cross-platform quiz application built with **React Native & Expo**, supporting offline functionality via **SQLite**.  
+A mobile application built with **React Native & Expo** for managing medicines. The app allows users to **Create**, **Read**, **Update**, and **Delete (CRUD)** medicine records, with data stored locally using **SQLite**.
 
-## Features ✨  
+---
 
-### **For Teachers** 👩‍🏫  
-- Create, edit, and delete quizzes  
-- Add multiple-choice questions with options  
-- Publish/unpublish quizzes  
-- View student results  
+## Features ✨
 
-### **For Students** 👨‍🎓  
-- Attempt quizzes offline  
-- Real-time result calculation  
-- Performance history tracking  
+- 📦 Add new medicines with name, brand, price, quantity, type, best before date, and description  
+- 🗃️ View a list of all added medicines  
+- ✏️ Edit existing medicine details  
+- ❌ Delete medicines from the database  
+- 📅 Choose best before year using a custom year picker
 
-## Tech Stack 💻  
+---
+
+## Tech Stack 💻
+
 - **Frontend**: React Native + Expo  
-- **Database**: SQLite (for offline storage)  
-- **State Management**: Context API  
+- **Database**: SQLite (local data persistence)  
 - **Navigation**: React Navigation  
+- **State Management**: React `useState` & `useEffect` hooks
 
-## Installation ⚙️  
+---
 
-**1. Clone the repo:**  
-   
-    git clone git@github.com:AmirHashmi017/Mobile-App-Development.git
+## Installation ⚙️
 
-**2. Install dependencies:**
+### 1. Clone the repository
 
-    cd Mobile-App-Development/quiz-app
-    npm install
+git clone https://github.com/your-username/medicine-management-app.git
 
-**3. Run the app**
+### 2. Navigate to the project directory
 
-    npx expo start
+cd meds-management
+
+### 3. Install the dependencies
+
+npm install
+
+### 4. Start the app
+
+npx expo start --tunnel
+

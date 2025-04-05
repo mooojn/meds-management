@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import YearPicker from '../components/YearPicker';
 import {
   View,
   Text,
@@ -87,14 +88,15 @@ const CreateMedicineScreen = ({ navigation }) => {
             onChangeText={setPrice}
             keyboardType="numeric"
           />
-
+{/* 
           <Text style={styles.label}>Best Before (YYYY-MM-DD)</Text>
           <TextInput
             style={styles.input}
             placeholder="Best Before (YYYY-MM-DD)"
             value={bestBefore}
             onChangeText={setBestBefore}
-          />
+          /> */}
+          <YearPicker selectedYear={bestBefore} onYearChange={setBestBefore} />
 
           <Text style={styles.label}>Quantity</Text>
           <TextInput
