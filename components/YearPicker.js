@@ -3,17 +3,20 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-const YearPicker = ({ selectedYear, onYearChange }) => {
+const YearPicker = ({ selectedYear, onYearChange, onValueChange }) => {
   const years = Array.from({ length: 26 }, (_, i) => 2025 + i);
+
+  // Use either onYearChange or onValueChange, whichever is passed
+  const handleChange = onYearChange || onValueChange;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Best Before Year</Text>
+      <Text style={styles.label}>Best Before</Text>
       <View style={styles.pickerWrapper}>
         <Picker
           selectedValue={selectedYear}
           style={styles.picker}
-          onValueChange={(itemValue) => onYearChange(itemValue)}
+          onValueChange={(itemValue) => handleChange?.(itemValue)}
         >
           <Picker.Item label="Select Year" value="" />
           {years.map((year) => (

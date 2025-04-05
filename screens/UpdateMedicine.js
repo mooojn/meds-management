@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import YearPicker from '../components/YearPicker';
 import database from '../database/database';
 
 const UpdateMedicine = ({ navigation, route }) => {
@@ -102,8 +103,7 @@ const UpdateMedicine = ({ navigation, route }) => {
         <Text style={styles.label}>Quantity</Text>
         <TextInput style={styles.input} placeholder="Quantity" value={quantity} onChangeText={setQuantity} keyboardType="numeric" />
 
-        <Text style={styles.label}>Expiry Date (YYYY-MM-DD)</Text>
-        <TextInput style={styles.input} placeholder="Expiry Date (YYYY-MM-DD)" value={expiryDate} onChangeText={setExpiryDate} />
+        <YearPicker selectedYear={expiryDate} onValueChange={setExpiryDate} />
 
         <TouchableOpacity style={styles.saveButton} onPress={handleUpdateMedicine} disabled={isSubmitting}>
           <Text style={styles.saveButtonText}>{isSubmitting ? 'Updating...' : 'Update Medicine'}</Text>
