@@ -31,31 +31,12 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-  // Function to handle deletion of a medicine
-  const handleDelete = async (name) => {
-    Alert.alert('Confirm', 'Are you sure you want to delete this medicine?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        onPress: async () => {
-          try {
-            await database.deleteMedicine(name);
-            loadMedicines();
-          } catch (error) {
-            Alert.alert('Error', 'Failed to delete medicine');
-            console.error(error);
-          }
-        },
-      },
-    ]);
-  };
-
-  const handleUpdate = (name) => {
-    navigation.navigate('UpdateMedicine', { medicineName: name });
-  };
-
   const handleAdd = () => {
     navigation.navigate('CreateMedicine');
+  };
+
+  const handleViewDetails = (medicine) => {
+    navigation.navigate('MedicineDetails', { medicine });
   };
 
   if (isLoading) {
@@ -84,17 +65,10 @@ const MainScreen = ({ navigation }) => {
             <Text style={styles.cell}>{item.price}</Text>
             <View style={styles.buttonGroup}>
               <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => handleUpdate(item.name)}
+                style={styles.viewButton}
+                onPress={() => handleViewDetails(item)}
               >
-                <Text style={styles.buttonText}>Edit</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => handleDelete(item.name)}
-              >
-                <Text style={styles.buttonText}>Delete</Text>
+                <Text style={styles.buttonText}>View Details</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -145,14 +119,8 @@ const styles = StyleSheet.create({
   buttonGroup: {
     flexDirection: 'row',
   },
-  editButton: {
-    backgroundColor: '#FFA500',
-    padding: 10,
-    borderRadius: 5,
-    marginRight: 5,
-  },
-  deleteButton: {
-    backgroundColor: '#FF4136',
+  viewButton: {
+    backgroundColor: '#4CAF50',
     padding: 10,
     borderRadius: 5,
   },

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import database from '../database/database';
 
 const UpdateMedicine = ({ navigation, route }) => {
@@ -58,7 +58,7 @@ const UpdateMedicine = ({ navigation, route }) => {
 
     try {
       setIsSubmitting(true);
-      database.updateMedicine(medicine.name, updatedMedicine); // Ensure correct method
+      await database.updateMedicine(medicine.name, updatedMedicine); // Ensure correct method
       console.log('Update attempted:', updatedMedicine);
       Alert.alert('Success', 'Medicine updated successfully');
       navigation.goBack();
@@ -79,20 +79,37 @@ const UpdateMedicine = ({ navigation, route }) => {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Edit Medicine</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={100}
+    >
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>Edit Medicine</Text>
 
-      <TextInput style={styles.input} placeholder="Medicine Name" value={name} onChangeText={setName} />
-      <TextInput style={styles.input} placeholder="Brand" value={brand} onChangeText={setBrand} />
-      <TextInput style={styles.input} placeholder="Type" value={type} onChangeText={setType} />
-      <TextInput style={styles.input} placeholder="Price" value={price} onChangeText={setPrice} keyboardType="numeric" />
-      <TextInput style={styles.input} placeholder="Quantity" value={quantity} onChangeText={setQuantity} keyboardType="numeric" />
-      <TextInput style={styles.input} placeholder="Expiry Date (YYYY-MM-DD)" value={expiryDate} onChangeText={setExpiryDate} />
+        <Text style={styles.label}>Medicine Name</Text>
+        <TextInput style={styles.input} placeholder="Medicine Name" value={name} onChangeText={setName} />
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleUpdateMedicine} disabled={isSubmitting}>
-        <Text style={styles.saveButtonText}>{isSubmitting ? 'Updating...' : 'Update Medicine'}</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <Text style={styles.label}>Brand</Text>
+        <TextInput style={styles.input} placeholder="Brand" value={brand} onChangeText={setBrand} />
+
+        <Text style={styles.label}>Type</Text>
+        <TextInput style={styles.input} placeholder="Type" value={type} onChangeText={setType} />
+
+        <Text style={styles.label}>Price</Text>
+        <TextInput style={styles.input} placeholder="Price" value={price} onChangeText={setPrice} keyboardType="numeric" />
+
+        <Text style={styles.label}>Quantity</Text>
+        <TextInput style={styles.input} placeholder="Quantity" value={quantity} onChangeText={setQuantity} keyboardType="numeric" />
+
+        <Text style={styles.label}>Expiry Date (YYYY-MM-DD)</Text>
+        <TextInput style={styles.input} placeholder="Expiry Date (YYYY-MM-DD)" value={expiryDate} onChangeText={setExpiryDate} />
+
+        <TouchableOpacity style={styles.saveButton} onPress={handleUpdateMedicine} disabled={isSubmitting}>
+          <Text style={styles.saveButtonText}>{isSubmitting ? 'Updating...' : 'Update Medicine'}</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -107,6 +124,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+  },
+  label: {
+    fontWeight: '600',
+    marginBottom: 5,
+    color: '#333',
   },
   input: {
     height: 50,

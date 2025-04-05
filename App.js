@@ -9,6 +9,7 @@ import MainScreen from './screens/MainScreen';
 import ViewMedicines from './screens/ViewMedicines';
 import UpdateMedicine from './screens/UpdateMedicine';
 import CreateMedicine from './screens/CreateMedicine';
+import MedicineDetails from './screens/MedicineDetails';
 // import Quiz from './screens/Quiz';
 // import QuizResult from './screens/QuizResult';
 
@@ -49,8 +50,7 @@ const App = () => {
           <Stack.Screen name="ViewMedicines" component={ViewMedicines} />
           <Stack.Screen name="UpdateMedicine" component={UpdateMedicine} />
           <Stack.Screen name="CreateMedicine" component={CreateMedicine} />
-          {/* <Stack.Screen name="Quiz" component={Quiz} /> */}
-          {/* <Stack.Screen name="QuizResult" component={QuizResult} options={{ headerShown: false }} /> */}
+          <Stack.Screen name="MedicineDetails" component={MedicineDetails} />
         </Stack.Navigator>
       </NavigationContainer>
   );

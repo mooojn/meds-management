@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import database from '../database/database';
 
 const CreateMedicineScreen = ({ navigation }) => {
@@ -17,13 +27,11 @@ const CreateMedicineScreen = ({ navigation }) => {
       Alert.alert('Error', 'Please fill all required fields.');
       return;
     }
-  
+
     setIsSubmitting(true);
     try {
-      // Get the current date and time
-      const dateOfEntry = new Date().toISOString(); // Current date and time in ISO format
-      
-      // Pass date_of_entry along with other medicine details
+      const dateOfEntry = new Date().toISOString();
+
       await database.addMedicine({
         name,
         brand,
@@ -32,8 +40,9 @@ const CreateMedicineScreen = ({ navigation }) => {
         quantity: parseInt(quantity, 10),
         type,
         description,
-        date_of_entry: dateOfEntry, // Adding date_of_entry to the medicine object
+        date_of_entry: dateOfEntry,
       });
+
       Alert.alert('Success', 'Medicine added successfully.');
       navigation.goBack();
     } catch (error) {
@@ -43,80 +52,98 @@ const CreateMedicineScreen = ({ navigation }) => {
       setIsSubmitting(false);
     }
   };
-  
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Add New Medicine</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={100}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Add New Medicine</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Medicine Name"
-        value={name}
-        onChangeText={setName}
-      />
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Brand"
-        value={brand}
-        onChangeText={setBrand}
-      />
+          <Text style={styles.label}>Medicine Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Medicine Name"
+            value={name}
+            onChangeText={setName}
+          />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Price ($)"
-        value={price}
-        onChangeText={setPrice}
-        keyboardType="numeric"
-      />
+          <Text style={styles.label}>Brand</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Brand"
+            value={brand}
+            onChangeText={setBrand}
+          />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Best Before (YYYY-MM-DD)"
-        value={bestBefore}
-        onChangeText={setBestBefore}
-      />
+          <Text style={styles.label}>Price ($)</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Price ($)"
+            value={price}
+            onChangeText={setPrice}
+            keyboardType="numeric"
+          />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Quantity"
-        value={quantity}
-        onChangeText={setQuantity}
-        keyboardType="numeric"
-      />
+          <Text style={styles.label}>Best Before (YYYY-MM-DD)</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Best Before (YYYY-MM-DD)"
+            value={bestBefore}
+            onChangeText={setBestBefore}
+          />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Type"
-        value={type}
-        onChangeText={setType}
-      />
+          <Text style={styles.label}>Quantity</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Quantity"
+            value={quantity}
+            onChangeText={setQuantity}
+            keyboardType="numeric"
+          />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Description (optional)"
-        value={description}
-        onChangeText={setDescription}
-        multiline
-      />
+          <Text style={styles.label}>Type</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Type"
+            value={type}
+            onChangeText={setType}
+          />
 
-      <TouchableOpacity
-        style={styles.saveButton}
-        onPress={handleSaveMedicine}
-        disabled={isSubmitting}
-      >
-        <Text style={styles.saveButtonText}>
-          {isSubmitting ? 'Saving...' : 'Save Medicine'}
-        </Text>
-      </TouchableOpacity>
-    </View>
+          <Text style={styles.label}>Description (optional)</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Description (optional)"
+            value={description}
+            onChangeText={setDescription}
+            multiline
+          />
+
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleSaveMedicine}
+            disabled={isSubmitting}
+          >
+            <Text style={styles.saveButtonText}>
+              {isSubmitting ? 'Saving...' : 'Save Medicine'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    padding: 20,
+    paddingBottom: 40,
+  },
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: '#f5f5f5',
   },
   title: {
@@ -124,6 +151,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+  },
+  label: {
+    marginBottom: 5,
+    fontWeight: '600',
+    color: '#333',
   },
   input: {
     height: 50,
