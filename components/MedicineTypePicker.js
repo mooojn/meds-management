@@ -1,4 +1,3 @@
-// components/MedicineTypePicker.js
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';

@@ -10,12 +10,11 @@ const MedicineDetails = () => {
 
   const [currentMedicine, setCurrentMedicine] = useState(medicine);
 
-  // Reload medicine details when screen is focused
   useFocusEffect(
     React.useCallback(() => {
       const fetchMedicine = async () => {
         try {
-          const updatedMedicine = await database.getMedicineByName(currentMedicine.name); // Assuming you have this method
+          const updatedMedicine = await database.getMedicineByName(currentMedicine.name);
           setCurrentMedicine(updatedMedicine);
         } catch (error) {
           console.error('Error fetching medicine details', error);
@@ -25,9 +24,8 @@ const MedicineDetails = () => {
       fetchMedicine();
 
       return () => {
-        // Cleanup (optional) when screen is unfocused
       };
-    }, [currentMedicine.name]) // Runs again if medicine name changes
+    }, [currentMedicine.name])
   );
 
   const handleDelete = () => {
@@ -38,7 +36,7 @@ const MedicineDetails = () => {
         onPress: async () => {
           try {
             await database.deleteMedicine(currentMedicine.name);
-            navigation.goBack(); // Go back after successful deletion
+            navigation.goBack();
           } catch (error) {
             Alert.alert('Error', 'Failed to delete medicine');
             console.error(error);
@@ -103,7 +101,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   editButton: {
-    backgroundColor: '#FFA500',
+    backgroundColor: '#67c8ff',
     padding: 10,
     borderRadius: 5,
     marginRight: 5,

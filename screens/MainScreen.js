@@ -74,7 +74,6 @@ const MainScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Medicine Management System</Text>
 
-      {/* Filters */}
       <View style={styles.filterContainer}>
         <TextInput
           style={styles.filterInput}
@@ -87,16 +86,15 @@ const MainScreen = ({ navigation }) => {
           style={[styles.toggleButton, priceCondition === '>' ? styles.active : null]}
           onPress={() => setPriceCondition('>')}
         >
-          <Text>{'Above'}</Text>
+          <Text style={[styles.toggleButtonText, priceCondition === '>' ? styles.activeText : null]}>{'Above'}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.toggleButton, priceCondition === '<' ? styles.active : null]}
           onPress={() => setPriceCondition('<')}
         >
-          <Text>{'Below'}</Text>
+          <Text style={[styles.toggleButtonText, priceCondition === '<' ? styles.activeText : null]}>{'Below'}</Text>
         </TouchableOpacity>
 
-        {/* Expiry Year Filter */}
         <View style={styles.pickerWrapper}>
           <Picker
             selectedValue={expiryYearFilter}
@@ -110,37 +108,39 @@ const MainScreen = ({ navigation }) => {
           </Picker>
         </View>
 
-        {/* Apply Filters Button */}
         <TouchableOpacity style={styles.filterButton} onPress={applyFilters}>
           <Text style={styles.filterButtonText}>Apply Filters</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Create Button */}
       <TouchableOpacity style={styles.createButton} onPress={handleAdd}>
         <Text style={styles.createButtonText}>Create New Medicine</Text>
       </TouchableOpacity>
 
-      {/* Medicine List */}
-      <FlatList
-        data={filteredMedicines}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <View style={styles.tableRow}>
-            <Text style={styles.cell}>{item.name}</Text>
-            <Text style={styles.cell}>{item.brand}</Text>
-            <Text style={styles.cell}>{item.price}</Text>
-            <View style={styles.buttonGroup}>
-              <TouchableOpacity
-                style={styles.viewButton}
-                onPress={() => handleViewDetails(item)}
-              >
-                <Text style={styles.buttonText}>View Details</Text>
-              </TouchableOpacity>
+      {/* Check if filteredMedicines is empty */}
+      {filteredMedicines.length === 0 ? (
+        <Text style={styles.noMedicinesText}>No medicines available with the applied filters</Text>
+      ) : (
+        <FlatList
+          data={filteredMedicines}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => (
+            <View style={styles.tableRow}>
+              <Text style={styles.cell}>{item.name}</Text>
+              <Text style={styles.cell}>{item.brand}</Text>
+              <Text style={styles.cell}>{item.price}</Text>
+              <View style={styles.buttonGroup}>
+                <TouchableOpacity
+                  style={styles.viewButton}
+                  onPress={() => handleViewDetails(item)}
+                >
+                  <Text style={styles.buttonText}>View Details</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      )}
     </View>
   );
 };
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     marginBottom: 45,
   },
   filterInput: {
-    flexBasis: '25%',
+    flexBasis: '55%',
     marginRight: 5,
     height: 40,
     borderWidth: 1,
@@ -223,7 +223,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   active: {
-    backgroundColor: '#ddd',
+    backgroundColor: '#67c8ff',
+  },
+  toggleButtonText: {
+    color: '#333',
+  },
+  activeText: {
+    color: 'white',
   },
   filterButton: {
     backgroundColor: '#FFA500',
@@ -239,8 +245,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    marginLeft: 5,
-    marginVertical: 5,
+    marginVertical: 10,
     backgroundColor: '#fff',
     width: 120,
     height: 40,
@@ -249,6 +254,13 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     width: '100%',
+  },
+  noMedicinesText: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'red',
+    marginTop: 20,
   },
 });
 
