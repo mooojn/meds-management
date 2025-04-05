@@ -117,7 +117,6 @@ const MainScreen = ({ navigation }) => {
         <Text style={styles.createButtonText}>Create New Medicine</Text>
       </TouchableOpacity>
 
-      {/* Check if filteredMedicines is empty */}
       {filteredMedicines.length === 0 ? (
         <Text style={styles.noMedicinesText}>No medicines available with the applied filters</Text>
       ) : (
